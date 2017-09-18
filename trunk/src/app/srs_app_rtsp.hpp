@@ -77,7 +77,7 @@ public:
     virtual int listen();
 // interface ISrsUdpHandler
 public:
-    virtual int on_udp_packet(sockaddr_in* from, char* buf, int nb_buf);
+    virtual int on_udp_packet(sockaddr_in6* from, char* buf, int nb_buf);
 };
 
 /**

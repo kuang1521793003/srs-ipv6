@@ -161,7 +161,7 @@ string srs_dns_resolve(string host)
         return host;
     }
     
-    hostent* answer = gethostbyname(host.c_str());
+    hostent* answer = getipnodebyname(host.c_str());
     if (answer == NULL) {
         return "";
     }
@@ -169,7 +169,7 @@ string srs_dns_resolve(string host)
     char ipv4[16];
     memset(ipv4, 0, sizeof(ipv4));
     for (int i = 0; i < answer->h_length; i++) {
-        inet_ntop(AF_INET, answer->h_addr_list[i], ipv4, sizeof(ipv4));
+        inet_ntop(AF_INET6, answer->h_addr_list[i], ipv4, sizeof(ipv4));
         break;
     }
     

@@ -278,7 +278,7 @@ void* io_client(void* arg)
 {
     
     int fd;
-    if ((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    if ((fd = socket(AF_INET6, SOCK_STREAM, 0)) == -1) {
         srs_trace("create linux socket error.");
         return NULL;
     }
@@ -291,11 +291,11 @@ void* io_client(void* arg)
     }
     srs_trace("7. client st open socket success. fd=%d", fd);
     
-    struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(io_port);
-    addr.sin_addr.s_addr = INADDR_ANY;
-    if (st_connect(stfd, (const struct sockaddr*)&addr, sizeof(struct sockaddr_in), ST_UTIME_NO_TIMEOUT) == -1) {
+    struct sockaddr_in6 addr;
+    addr.sin6_family = AF_INET6;
+    addr.sin6_port = htons(io_port);
+    addr.sin6_addr = in6addr_any;
+    if (st_connect(stfd, (const struct sockaddr*)&addr, sizeof(struct sockaddr_in6), ST_UTIME_NO_TIMEOUT) == -1) {
         srs_trace("bind socket error.");
         return NULL;
     }
@@ -321,7 +321,7 @@ int io_test()
     srs_trace("io test: start, port=%d", io_port);
     
     int fd;
-    if ((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    if ((fd = socket(AF_INET6, SOCK_STREAM, 0)) == -1) {
         srs_trace("create linux socket error.");
         return -1;
     }
@@ -334,11 +334,11 @@ int io_test()
     }
     srs_trace("2. server setsockopt reuse-addr success. fd=%d", fd);
     
-    struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(io_port);
-    addr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(fd, (const struct sockaddr*)&addr, sizeof(struct sockaddr_in)) == -1) {
+    struct sockaddr_in6 addr;
+    addr.sin6_family = AF_INET6;
+    addr.sin6_port = htons(io_port);
+    addr.sin6_addr = in6addr_any;
+    if (bind(fd, (const struct sockaddr*)&addr, sizeof(struct sockaddr_in6)) == -1) {
         srs_trace("bind socket error.");
         return -1;
     }

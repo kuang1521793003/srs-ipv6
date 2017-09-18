@@ -159,10 +159,10 @@ SrsMpegtsOverUdp::~SrsMpegtsOverUdp()
     srs_freep(pprint);
 }
 
-int SrsMpegtsOverUdp::on_udp_packet(sockaddr_in* from, char* buf, int nb_buf)
+int SrsMpegtsOverUdp::on_udp_packet(sockaddr_in6* from, char* buf, int nb_buf)
 {
-    std::string peer_ip = inet_ntoa(from->sin_addr);
-    int peer_port = ntohs(from->sin_port);
+    std::string peer_ip = inet_ntop(from->sin_addr);
+    int peer_port = ntohs(from->sin6_port);
 
     // append to buffer.
     buffer->append(buf, nb_buf);

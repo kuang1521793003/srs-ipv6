@@ -330,7 +330,7 @@ struct Context
     const char* inet_ntop(int af, const void *src, char *dst, socklen_t size)
     {
         switch (af) {
-        case AF_INET:
+        case AF_INET6:
             return (inet_ntop4( (unsigned char*)src, (char*)dst, size)); // ****
     #ifdef AF_INET6
         #error "IPv6 not supported"
@@ -351,7 +351,7 @@ struct Context
      *    `dst' (as a const)
      * notes:
      *    (1) uses no statics
-     *    (2) takes a u_char* not an in_addr as input
+     *    (2) takes a u_char* not an in6_addr as input
      * author:
      *    Paul Vixie, 1996.
      */

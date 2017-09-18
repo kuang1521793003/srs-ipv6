@@ -57,9 +57,9 @@ int srs_socket_connect(string server, int port, int64_t timeout, st_netfd_t* pst
     
     *pstfd = NULL;
     st_netfd_t stfd = NULL;
-    sockaddr_in addr;
+    sockaddr_in6 addr;
     
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    int sock = socket(AF_INET6, SOCK_STREAM, 0);
     if(sock == -1){
         ret = ERROR_SOCKET_CREATE;
         srs_error("create socket error. ret=%d", ret);
@@ -82,11 +82,11 @@ int srs_socket_connect(string server, int port, int64_t timeout, st_netfd_t* pst
         goto failed;
     }
     
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = inet_addr(ip.c_str());
+    addr.sin6_family = AF_INET6;
+    addr.sin6_port = htons(port);
+    addr.sin6_addr = inet_addr(ip.c_str());
     
-    if (st_connect(stfd, (const struct sockaddr*)&addr, sizeof(sockaddr_in), timeout) == -1){
+    if (st_connect(stfd, (const struct sockaddr*)&addr, sizeof(sockaddr_in6), timeout) == -1){
         ret = ERROR_ST_CONNECT;
         srs_error("connect to server error. ip=%s, port=%d, ret=%d", ip.c_str(), port, ret);
         goto failed;
@@ -1239,8 +1239,8 @@ void retrieve_local_ipv4_ips()
         // ignore the tun0 network device, 
         // which addr is NULL.
         // @see: https://github.com/ossrs/srs/issues/141
-        if (addr && addr->sa_family == AF_INET) {
-            in_addr* inaddr = &((sockaddr_in*)addr)->sin_addr;
+        if (addr && addr->sa_family == AF_INET6) {
+            in6_addr* inaddr = &((sockaddr_in6*)addr)->sin6_addr;
             
             char buf[16];
             memset(buf, 0, sizeof(buf));
@@ -1344,7 +1344,7 @@ string srs_get_local_ip(int fd)
     std::string ip;
 
     // discovery client information
-    sockaddr_in addr;
+    sockaddr_in6 addr;
     socklen_t addrlen = sizeof(addr);
     if (getsockname(fd, (sockaddr*)&addr, &addrlen) == -1) {
         return ip;
@@ -1355,7 +1355,7 @@ string srs_get_local_ip(int fd)
     char buf[INET6_ADDRSTRLEN];
     memset(buf, 0, sizeof(buf));
 
-    if ((inet_ntop(addr.sin_family, &addr.sin_addr, buf, sizeof(buf))) == NULL) {
+    if ((inet_ntop(addr.sin6_family, &addr.sin_addr, buf, sizeof(buf))) == NULL) {
         return ip;
     }
 
@@ -1369,14 +1369,14 @@ string srs_get_local_ip(int fd)
 int srs_get_local_port(int fd)
 {
     // discovery client information
-    sockaddr_in addr;
+    sockaddr_in6 addr;
     socklen_t addrlen = sizeof(addr);
     if (getsockname(fd, (sockaddr*)&addr, &addrlen) == -1) {
         return 0;
     }
     srs_verbose("get local ip success.");
     
-    int port = ntohs(addr.sin_port);
+    int port = ntohs(addr.sin6_port);
 
     srs_verbose("get local ip of client port=%s, fd=%d", port, fd);
 
@@ -1388,7 +1388,7 @@ string srs_get_peer_ip(int fd)
     std::string ip;
     
     // discovery client information
-    sockaddr_in addr;
+    sockaddr_in6 addr;
     socklen_t addrlen = sizeof(addr);
     if (getpeername(fd, (sockaddr*)&addr, &addrlen) == -1) {
         return ip;
@@ -1399,7 +1399,7 @@ string srs_get_peer_ip(int fd)
     char buf[INET6_ADDRSTRLEN];
     memset(buf, 0, sizeof(buf));
     
-    if ((inet_ntop(addr.sin_family, &addr.sin_addr, buf, sizeof(buf))) == NULL) {
+    if ((inet_ntop(addr.sin6_family, &addr.sin_addr, buf, sizeof(buf))) == NULL) {
         return ip;
     }
     srs_verbose("get peer ip of client ip=%s, fd=%d", buf, fd);

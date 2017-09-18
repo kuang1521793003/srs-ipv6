@@ -108,7 +108,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     {
         SrsBlockSyncSocket* skt = (SrsBlockSyncSocket*)ctx;
         
-        skt->fd = ::socket(AF_INET, SOCK_STREAM, 0);
+        skt->fd = ::socket(AF_INET6, SOCK_STREAM, 0);
         if (!SOCKET_VALID(skt->fd)) {
             return ERROR_SOCKET_CREATE;
         }
@@ -119,12 +119,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     {
         SrsBlockSyncSocket* skt = (SrsBlockSyncSocket*)ctx;
         
-        sockaddr_in addr;
-        addr.sin_family = AF_INET;
-        addr.sin_port = htons(port);
-        addr.sin_addr.s_addr = inet_addr(server_ip);
+        sockaddr_in6 addr;
+        addr.sin6_family = AF_INET6;
+        addr.sin6_port = htons(port);
+        addr.sin6_addr = inet_addr(server_ip);
         
-        if(::connect(skt->fd, (const struct sockaddr*)&addr, sizeof(sockaddr_in)) < 0){
+        if(::connect(skt->fd, (const struct sockaddr*)&addr, sizeof(sockaddr_in6)) < 0){
             return ERROR_SOCKET_CONNECT;
         }
         

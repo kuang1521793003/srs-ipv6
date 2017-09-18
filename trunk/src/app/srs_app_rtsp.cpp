@@ -73,7 +73,7 @@ int SrsRtpConn::listen()
     return listener->listen();
 }
 
-int SrsRtpConn::on_udp_packet(sockaddr_in* from, char* buf, int nb_buf)
+int SrsRtpConn::on_udp_packet(sockaddr_in6* from, char* buf, int nb_buf)
 {
     int ret = ERROR_SUCCESS;
 

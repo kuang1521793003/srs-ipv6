@@ -111,7 +111,7 @@ int SrsUdpListener::listen()
 {
     int ret = ERROR_SUCCESS;
     
-    if ((_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+    if ((_fd = socket(AF_INET6, SOCK_DGRAM, 0)) == -1) {
         ret = ERROR_SOCKET_CREATE;
         srs_error("create linux socket error. ip=%s, port=%d, ret=%d", ip.c_str(), port, ret);
         return ret;
@@ -126,11 +126,11 @@ int SrsUdpListener::listen()
     }
     srs_verbose("setsockopt reuse-addr success. ip=%s, port=%d, fd=%d", ip.c_str(), port, _fd);
     
-    sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = inet_addr(ip.c_str());
-    if (bind(_fd, (const sockaddr*)&addr, sizeof(sockaddr_in)) == -1) {
+    sockaddr_in6 addr;
+    addr.sin6_family = AF_INET6;
+    addr.sin6_port = htons(port);
+    addr.sin6_addr = inet_addr(ip.c_str());
+    if (bind(_fd, (const sockaddr*)&addr, sizeof(sockaddr_in6)) == -1) {
         ret = ERROR_SOCKET_BIND;
         srs_error("bind socket error. ep=%s:%d, ret=%d", ip.c_str(), port, ret);
         return ret;
@@ -158,8 +158,8 @@ int SrsUdpListener::cycle()
     int ret = ERROR_SUCCESS;
 
     // TODO: FIXME: support ipv6, @see man 7 ipv6
-    sockaddr_in from;
-    int nb_from = sizeof(sockaddr_in);
+    sockaddr_in6 from;
+    int nb_from = sizeof(sockaddr_in6);
     int nread = 0;
 
     if ((nread = st_recvfrom(_stfd, buf, nb_buf, (sockaddr*)&from, &nb_from, ST_UTIME_NO_TIMEOUT)) <= 0) {
@@ -208,7 +208,7 @@ int SrsTcpListener::listen()
 {
     int ret = ERROR_SUCCESS;
     
-    if ((_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    if ((_fd = socket(AF_INET6, SOCK_STREAM, 0)) == -1) {
         ret = ERROR_SOCKET_CREATE;
         srs_error("create linux socket error. port=%d, ret=%d", port, ret);
         return ret;
@@ -223,11 +223,11 @@ int SrsTcpListener::listen()
     }
     srs_verbose("setsockopt reuse-addr success. port=%d, fd=%d", port, _fd);
     
-    sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = inet_addr(ip.c_str());
-    if (bind(_fd, (const sockaddr*)&addr, sizeof(sockaddr_in)) == -1) {
+    sockaddr_in6 addr;
+    addr.sin6_family = AF_INET6;
+    addr.sin6_port = htons(port);
+    addr.sin6_addr = inet_addr(ip.c_str());
+    if (bind(_fd, (const sockaddr*)&addr, sizeof(sockaddr_in6)) == -1) {
         ret = ERROR_SOCKET_BIND;
         srs_error("bind socket error. ep=%s:%d, ret=%d", ip.c_str(), port, ret);
         return ret;
